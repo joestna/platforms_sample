@@ -4,58 +4,67 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    Animator runAnimation;
+    Animator animations;
+    Rigidbody2D phisicsPlayer;
+    public Collider2D ground;
 
     float velocidad = 1f;
-    float fuerza = 30f;
+    float fuerza = 100f; // Fuerza en las piernas para saltar
 
-    // Start is called before the first frame update
+
     void Start()
     {
         
     }
 
-    // Update is called once per frame
+
     void FixedUpdate()
     {
         float movement = Input.GetAxis("Horizontal");
-        runAnimation = GetComponent<Animator>();
+        animations = GetComponent<Animator>();
+        phisicsPlayer = GetComponent<Rigidbody2D>();
 
-        if (Input.GetButton("Horizontal"))
+        
+        // Verifica si el colider del personaje esta o no tocando el suelo
+        if (GetComponent<Collider2D>().IsTouching(ground))
         {
-            Rigidbody2D movPlayer = GetComponent<Rigidbody2D>();            
+            animations.SetBool("IsGrounded", true);
 
-            if (movement > 0)
+            if (Input.GetButton("Jump") && GetComponent<Collider2D>().IsTouching(ground))
             {
-                if(transform.localScale.x < 0)
-                {
-                    transform.localScale = new Vector3(transform.localScale.x * -1f, transform.localScale.y, transform.localScale.z);
-                }               
+                phisicsPlayer.AddForce(transform.up * fuerza);
             }
-            else
+
+            if (Input.GetButton("Horizontal"))
             {
-                if (transform.localScale.x > 0)
+                // Invertir el sprite segun el movimiento - derecha izquierda
+                if (movement > 0)
                 {
-                    transform.localScale = new Vector3(transform.localScale.x * -1f, transform.localScale.y, transform.localScale.z);
+                    if (transform.localScale.x < 0)
+                    {
+                        transform.localScale = new Vector3(transform.localScale.x * -1f, transform.localScale.y, transform.localScale.z);
+                    }
                 }
-            }
+                else
+                {
+                    if (transform.localScale.x > 0)
+                    {
+                        transform.localScale = new Vector3(transform.localScale.x * -1f, transform.localScale.y, transform.localScale.z);
+                    }
+                }
 
-            movPlayer.velocity = (transform.right * velocidad * movement);
-            // Mathf.Abs => si el valor de la variable que se pasa por parametro es negativo se pasa a positivo
-            
-        }
-
-        if (Input.GetButton("Jump"))
+                phisicsPlayer.velocity = (transform.right * velocidad * movement);
+            }           
+        }        
+        else
         {
-            //float movement = Input.GetAxis("Jump");
-
-            Rigidbody2D movPlayer = GetComponent<Rigidbody2D>();
-            movPlayer.AddForce(transform.up * fuerza);
-
-            //transform.position += velocity * Vector3.right * 0.0001f * Time.deltaTime;
+            animations.SetBool("IsGrounded", false);            
         }
 
-        runAnimation.SetFloat("MoveSpeed", Mathf.Abs(movement));
-        Debug.Log(movement);
+        // Salto   
+        animations.SetFloat("MoveSpeed", Mathf.Abs(movement));
+
+        // El blender tree de las animaciones solo se activa cuando el colider del personaje no esta tocando el suelo
+        animations.SetFloat("VerticalVelocity", GetComponent<Rigidbody2D>().velocity.y);
     }
 }
