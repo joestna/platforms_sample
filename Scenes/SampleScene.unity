@@ -288,7 +288,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: 3618a83a4e5943544af858792752ae7c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bae3b94bc37ec0043aec350587629bc4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -307,8 +307,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 679301393}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.6, y: 0.025, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalPosition: {x: -1.838, y: 1.081, z: 0}
+  m_LocalScale: {x: 0.20566002, y: 0.20566002, z: 0.20566002}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -326,8 +326,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.6765747, y: 0}
-  m_Size: {x: 2.1626604, y: 3.8600001}
+  m_Offset: {x: -0.63306266, y: 0.015462689}
+  m_Size: {x: 1.858076, y: 3.3596113}
   m_Direction: 0
 --- !u!95 &679301398
 Animator:
@@ -360,6 +360,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27b23f2a61780144491cbe1de7076f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ground: {fileID: 816938269}
+--- !u!61 &816938269 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 1879550479466603691, guid: de0cb8830324f9e46b9634fa712d15b1, type: 3}
+  m_PrefabInstance: {fileID: 3333638202071326180}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &299083544527898256
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -426,7 +432,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 856619290343505301, guid: de0cb8830324f9e46b9634fa712d15b1, type: 3}
       propertyPath: m_Name
-      value: grounds_3
+      value: Ground
+      objectReference: {fileID: 0}
+    - target: {fileID: 1879550479466603691, guid: de0cb8830324f9e46b9634fa712d15b1, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8267874834836366876, guid: de0cb8830324f9e46b9634fa712d15b1, type: 3}
       propertyPath: m_RootOrder
