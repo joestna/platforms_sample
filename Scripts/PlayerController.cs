@@ -9,8 +9,8 @@ public class PlayerController : MonoBehaviour
     public Collider2D ground;
     bool isGrounded = false;
 
-    float velocidad = 1f;
-    float fuerza = 4f; // Fuerza en las piernas para saltar
+    float velocidad = 2f; // Velocidad a la que va a correr el personaje
+    float fuerza = 5f; // Fuerza en las piernas para saltar
 
 
     void Start()
@@ -26,16 +26,15 @@ public class PlayerController : MonoBehaviour
         phisicsPlayer = GetComponent<Rigidbody2D>();
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
-        //Debug.Log(hit.collider.name);
-        //Debug.Log(isGrounded);
 
+        // Pone la variable is grounded a true cuando toca el suelo // Se utiliza raycast para verificar que toca el suelo evitando que se active la animacion de landing cuando toca un collider con la cabeza por ejemplo
         if (hit.distance < 0.4 && isGrounded == false && phisicsPlayer.velocity.y < 0 && hit.collider.tag == "Ground")
         {
-            Debug.Log("tocando " + phisicsPlayer.velocity.y);
+            //Debug.Log("tocando " + phisicsPlayer.velocity.y);
             isGrounded = true;
         }
 
-        // Verifica si el colider del personaje esta o no tocando el suelo
+        // Si el personaje esta tocando el suelo podra moverse y saltar
         if (isGrounded == true)
         {            
             animations.SetBool("IsGrounded", true);
@@ -63,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
             if (Input.GetButton("Jump") && isGrounded == true)
             {
-                //phisicsPlayer.AddForce(transform.up * fuerza);
+                // Se utiliza para aplicar una fuerza con potencia simulando un impulso
                 phisicsPlayer.AddForce(transform.up * fuerza, ForceMode2D.Impulse);
 
                 isGrounded = false;
@@ -74,15 +73,11 @@ public class PlayerController : MonoBehaviour
             animations.SetBool("IsGrounded", false);            
         }
 
-        
-
-        
-
-        // Salto   
+        // Variable animator para que se active la animacion de run 
         animations.SetFloat("MoveSpeed", Mathf.Abs(movement));
 
+        // Variable animator para indicar cuando se activara cada una de las animaciones del blender tree
         // El blender tree de las animaciones solo se activa cuando el colider del personaje no esta tocando el suelo
         animations.SetFloat("VerticalVelocity", GetComponent<Rigidbody2D>().velocity.y);
-        //Debug.Log(GetComponent<Rigidbody2D>().velocity.y);
     }
 }
