@@ -7,10 +7,10 @@ public class PlayerController : MonoBehaviour
     Animator animations;
     Rigidbody2D phisicsPlayer;
     public Collider2D ground;
-    bool isGrounded = true;
+    bool isGrounded = false;
 
     float velocidad = 1f;
-    float fuerza = 200f; // Fuerza en las piernas para saltar
+    float fuerza = 4f; // Fuerza en las piernas para saltar
 
 
     void Start()
@@ -25,30 +25,22 @@ public class PlayerController : MonoBehaviour
         animations = GetComponent<Animator>();
         phisicsPlayer = GetComponent<Rigidbody2D>();
 
-        
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
+        //Debug.Log(hit.collider.name);
+        //Debug.Log(isGrounded);
+
+        if (hit.distance < 0.4 && isGrounded == false && phisicsPlayer.velocity.y < 0 && hit.collider.tag == "Ground")
+        {
+            Debug.Log("tocando " + phisicsPlayer.velocity.y);
+            isGrounded = true;
+        }
+
         // Verifica si el colider del personaje esta o no tocando el suelo
-        if (GetComponent<Collider2D>().IsTouching(ground))
+        if (isGrounded == true)
         {            
             animations.SetBool("IsGrounded", true);
 
-            if (Input.GetButton("Jump") && GetComponent<Collider2D>().IsTouching(ground))
-            {
-                //phisicsPlayer.AddForce(transform.up * fuerza);
-                phisicsPlayer.AddForce(transform.up * 2f, ForceMode2D.Impulse);
-
-                isGrounded = false;               
-            }
-
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up);
-
-            if (hit.distance < 0.4 && isGrounded == false)
-            {
-                //Debug.Log("detecto" + hit.collider.gameObject.name +  " " + hit.distance);
-                Debug.Log("tocando " + phisicsPlayer.velocity.y);
-                isGrounded = true;
-            }
-
-            if (Input.GetButton("Horizontal")  && GetComponent<Collider2D>().IsTouching(ground))
+            if (Input.GetButton("Horizontal")  && isGrounded == true)
             {
                 // Invertir el sprite segun el movimiento - derecha izquierda
                 if (movement > 0)
@@ -67,17 +59,30 @@ public class PlayerController : MonoBehaviour
                 }
 
                 phisicsPlayer.velocity = (transform.right * velocidad * movement);
-            }           
+            }
+
+            if (Input.GetButton("Jump") && isGrounded == true)
+            {
+                //phisicsPlayer.AddForce(transform.up * fuerza);
+                phisicsPlayer.AddForce(transform.up * fuerza, ForceMode2D.Impulse);
+
+                isGrounded = false;
+            }
         }        
         else
         {
             animations.SetBool("IsGrounded", false);            
         }
 
+        
+
+        
+
         // Salto   
         animations.SetFloat("MoveSpeed", Mathf.Abs(movement));
 
         // El blender tree de las animaciones solo se activa cuando el colider del personaje no esta tocando el suelo
         animations.SetFloat("VerticalVelocity", GetComponent<Rigidbody2D>().velocity.y);
+        //Debug.Log(GetComponent<Rigidbody2D>().velocity.y);
     }
 }
